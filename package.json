@@ -6,8 +6,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "tsx src/index.ts",
-    "dev": "fastmcp dev src/index.ts",
-    "inspect": "fastmcp inspect src/index.ts"
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
   },
   "keywords": [
     "mcp",
@@ -17,10 +17,13 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "fastmcp": "latest"
+    "@vercel/mcp-adapter": "^0.3.1",
+    "fastmcp": "latest",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "tsx": "^4.7.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vercel": "^35.0.0"
   }
 }

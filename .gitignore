@@ -127,3 +127,4 @@ public
 # Project specific
 dist/
 build/ 
+.vercel

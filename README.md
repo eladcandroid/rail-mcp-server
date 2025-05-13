@@ -1,110 +1,107 @@
 # Jerusalem Light Rail MCP Server
 
-A Claude-compatible MCP server for fetching Jerusalem light rail schedules. This server provides tools to get information about the Jerusalem light rail system in Hebrew.
+An MCP (Model Context Protocol) server that provides tools for accessing Jerusalem Light Rail schedules. This server is designed to be deployed on Vercel.
 
 ## Features
 
-- Get all light rail stations and their IDs
-- Find station IDs by Hebrew station names
-- Get real-time train schedules between stations
-- Search for trains using natural Hebrew language
+- Get a list of all light rail stations
+- Find station IDs by their Hebrew names
+- Get train schedules between stations
+- Search for trains using Hebrew station names
 
-## Installation
+## Tools Available
 
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/jerusalem-light-rail-mcp.git
-cd jerusalem-light-rail-mcp
+### get-stations
+Gets all light rail stations and their IDs.
 
-# Install dependencies
-npm install
-```
+### find-station
+Finds a station ID by its Hebrew name.
 
-## Usage
+Parameters:
+- `stationName`: The Hebrew name of the station
 
-### Run as MCP Server
+### get-train-schedule
+Gets the train schedule between two stations.
 
-Start the server normally:
+Parameters:
+- `fromStationId`: ID of the departure station
+- `toStationId`: ID of the arrival station
+- `date`: Date in format YYYYMMDD
+- `time`: Time in format HHMM
 
-```bash
-npm start
-```
+### search-trains-by-name
+Searches for trains between two stations using Hebrew station names.
 
-### Development Mode
+Parameters:
+- `fromStationName`: Hebrew name of the departure station
+- `toStationName`: Hebrew name of the arrival station
+- `date`: (Optional) Date in format YYYYMMDD (default: today)
+- `time`: (Optional) Time in format HHMM (default: current time)
+- `clientTime`: (Optional) Client's current time in ISO format
 
-Run the server in development mode with the built-in MCP CLI:
+## Deployment
 
-```bash
-npm run dev
-```
+### Prerequisites
 
-### Debug with MCP Inspector
+- Node.js 18 or later
+- Vercel account
 
-Use the MCP Inspector for visual debugging:
+### Local Development
 
-```bash
-npm run inspect
-```
+1. Install dependencies:
+   ```
+   npm install
+   ```
 
-## Integration with Claude
+2. Run the development server:
+   ```
+   npm run dev
+   ```
 
-To use this server with Claude, create a configuration file like this:
+### Deploy to Vercel
 
-```json
-{
-  "mcpServers": {
-    "jerusalem-light-rail": {
-      "command": "npx",
-      "args": ["tsx", "/path/to/jerusalem-light-rail-mcp/src/index.ts"],
-      "env": {}
-    }
+1. Deploy to Vercel:
+   ```
+   npm run deploy
+   ```
+
+## Using with MCP Clients
+
+This server can be used with any MCP client, including:
+
+- Claude AI (direct integration)
+- Custom MCP clients using the MCP TypeScript SDK
+- Cursor AI
+- Other MCP-compatible clients
+
+### Example: Connecting with a client
+
+```typescript
+import { Client } from "@modelcontextprotocol/sdk/client";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp";
+
+const client = new Client({
+  name: "Light Rail Client",
+  version: "1.0.0"
+});
+
+// Connect to the MCP server
+const transport = new StreamableHTTPClientTransport(
+  new URL("https://your-vercel-deployment-url.vercel.app/mcp")
+);
+await client.connect(transport);
+
+// Call the search-trains-by-name tool
+const result = await client.callTool({
+  name: "search-trains-by-name",
+  arguments: {
+    fromStationName: "נווה יעקב צפון",
+    toStationName: "סיירת דוכיפת",
   }
-}
+});
+
+console.log(result);
 ```
-
-Save this as `claude-config.json` and enable Claude to access it when running queries about Jerusalem's light rail.
-
-## Example Queries
-
-### Natural Language Query (Hebrew)
-
-```
-הצג לי את זמן הרכבות הקרובות מנווה יעקב צפון לסיירת דוכיפת
-```
-
-This will automatically:
-1. Detect the station names
-2. Find their IDs
-3. Use the current time
-4. Display upcoming train schedules with departure times, arrival times, and crowdedness levels
-
-### Using Individual Tools
-
-```
-# Get all stations
-get-stations
-
-# Find a station ID
-find-station { "stationName": "נווה יעקב – צפון" }
-
-# Get train schedule
-get-train-schedule {
-  "fromStationId": 1,
-  "toStationId": 6,
-  "date": "20250511",
-  "time": "1136"
-}
-
-# Search by station names
-search-trains-by-name {
-  "fromStationName": "נווה יעקב צפון",
-  "toStationName": "סיירת דוכיפת"
-}
-```
-
-## Data Source
-
-This server fetches real-time data from the official Jerusalem Light Rail API.
 
 ## License
 
