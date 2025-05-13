@@ -1,0 +1,26 @@
+{
+  "name": "rail-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for fetching Jerusalem light rail schedules",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "fastmcp dev src/index.ts",
+    "inspect": "fastmcp inspect src/index.ts"
+  },
+  "keywords": [
+    "mcp",
+    "light-rail",
+    "jerusalem"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "fastmcp": "latest"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.1.6"
+  }
+}

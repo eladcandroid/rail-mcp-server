@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "jerusalem-light-rail": {
+      "command": "npx",
+      "args": ["tsx", "/Users/elad/dev/rail/src/index.ts"],
+      "env": {}
+    }
+  }
+}
