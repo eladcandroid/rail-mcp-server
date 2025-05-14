@@ -46,6 +46,31 @@ https://your-vercel-deployment-url.vercel.app/mcp
 
 You can install this server in Claude AI and interact with it right away.
 
+### Using with Claude Desktop
+
+To use this MCP server with Claude Desktop:
+
+1. Install the `mcp-remote` package globally (if not already installed):
+```bash
+npm install -g mcp-remote
+```
+
+2. Add the following configuration to your Claude Desktop configuration file:
+```json
+{
+  "mcpServers": {
+    "rail-mcp": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://rail-mcp.vercel.app/mcp"]
+    }
+  }
+}
+```
+
+3. Claude Desktop will now be able to access the Jerusalem Light Rail tools.
+
+### Using with TypeScript SDK
+
 Alternatively, you can test it with any MCP client using the TypeScript SDK:
 
 ```typescript
