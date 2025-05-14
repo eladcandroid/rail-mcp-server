@@ -1,80 +1,52 @@
 # Jerusalem Light Rail MCP Server
 
-An MCP (Model Context Protocol) server that provides tools for accessing Jerusalem Light Rail schedules. This server is designed to be deployed on Vercel.
+Easily access Jerusalem Light Rail schedules and find the nearest stations to any location using this Model Context Protocol (MCP) server. This server is designed to be deployed on Vercel.
 
-## Features
+---
 
-- Get a list of all light rail stations
-- Find station IDs by their Hebrew names
-- Get train schedules between stations
-- Search for trains using Hebrew station names
+## Quick Start
 
-## Tools Available
+### Requirements
 
-### get-stations
-Gets all light rail stations and their IDs.
+#### Vercel Account
+This project is designed to be deployed on Vercel, so you'll need a Vercel account.
 
-### find-station
-Finds a station ID by its Hebrew name.
+#### Node.js
+Node.js 18 or later is required to run this project.
 
-Parameters:
-- `stationName`: The Hebrew name of the station
+### Installation
 
-### get-train-schedule
-Gets the train schedule between two stations.
+1. Clone the repository:
+```bash
+git clone https://github.com/eladcandroid/rail-mcp-server.git
+cd rail-mcp-server
+```
 
-Parameters:
-- `fromStationId`: ID of the departure station
-- `toStationId`: ID of the arrival station
-- `date`: Date in format YYYYMMDD
-- `time`: Time in format HHMM
+2. Install dependencies:
+```bash
+npm install
+```
 
-### search-trains-by-name
-Searches for trains between two stations using Hebrew station names.
+### Usage
 
-Parameters:
-- `fromStationName`: Hebrew name of the departure station
-- `toStationName`: Hebrew name of the arrival station
-- `date`: (Optional) Date in format YYYYMMDD (default: today)
-- `time`: (Optional) Time in format HHMM (default: current time)
-- `clientTime`: (Optional) Client's current time in ISO format
+To run the server locally:
+```bash
+npm run dev
+```
 
-## Deployment
+To deploy to Vercel:
+```bash
+npm run deploy
+```
 
-### Prerequisites
+Once deployed, your MCP endpoint will be available at:
+```
+https://your-vercel-deployment-url.vercel.app/mcp
+```
 
-- Node.js 18 or later
-- Vercel account
+You can install this server in Claude AI and interact with it right away.
 
-### Local Development
-
-1. Install dependencies:
-   ```
-   npm install
-   ```
-
-2. Run the development server:
-   ```
-   npm run dev
-   ```
-
-### Deploy to Vercel
-
-1. Deploy to Vercel:
-   ```
-   npm run deploy
-   ```
-
-## Using with MCP Clients
-
-This server can be used with any MCP client, including:
-
-- Claude AI (direct integration)
-- Custom MCP clients using the MCP TypeScript SDK
-- Cursor AI
-- Other MCP-compatible clients
-
-### Example: Connecting with a client
+Alternatively, you can test it with any MCP client using the TypeScript SDK:
 
 ```typescript
 import { Client } from "@modelcontextprotocol/sdk/client";
@@ -91,7 +63,7 @@ const transport = new StreamableHTTPClientTransport(
 );
 await client.connect(transport);
 
-// Call the search-trains-by-name tool
+// Call a tool
 const result = await client.callTool({
   name: "search-trains-by-name",
   arguments: {
@@ -103,6 +75,54 @@ const result = await client.callTool({
 console.log(result);
 ```
 
+## Available Tools
+
+* `get-stations` - Get all light rail stations and their IDs
+
+* `find-station` - Find a station ID by its Hebrew name
+  * Required arguments:
+    * `stationName` (string): The Hebrew name of the station
+
+* `get-train-schedule` - Get the train schedule between two stations
+  * Required arguments:
+    * `fromStationId` (string): ID of the departure station
+    * `toStationId` (string): ID of the arrival station
+    * `date` (string): Date in format YYYYMMDD
+    * `time` (string): Time in format HHMM
+
+* `search-trains-by-name` - Search for trains between two stations using Hebrew names
+  * Required arguments:
+    * `fromStationName` (string): Hebrew name of the departure station
+    * `toStationName` (string): Hebrew name of the arrival station
+  * Optional arguments:
+    * `date` (string): Date in format YYYYMMDD (default: today)
+    * `time` (string): Time in format HHMM (default: current time)
+    * `clientTime` (string): Client's current time in ISO format
+
+* `find-nearest-station-to-landmark` - Find the nearest light rail station to any address or location
+  * Required arguments:
+    * `landmark` (string): Any location in Jerusalem - street address, landmark, restaurant, etc.
+  * Optional arguments:
+    * `date` (string): Date in format YYYYMMDD (default: today)
+    * `time` (string): Time in format HHMM (default: current time)
+    * `clientTime` (string): Client's current time in ISO format
+
+The `find-nearest-station-to-landmark` tool uses OpenStreetMap's Nominatim API to geocode any location in Jerusalem, calculates distances to all stations, and returns the nearest one with walking distance and train schedules. You can query virtually any location:
+
+- Exact addresses (רחוב יפו 97, ירושלים)
+- Neighborhoods (נחלאות, רחביה, בקעה)
+- Landmarks (הכותל המערבי, מגדל דוד)
+- Restaurants and cafes (קפה אמדו, מחניודה)
+- Hotels (מלון המלך דוד)
+- Shopping centers (קניון ממילא, קניון מלחה)
+- Institutions (האוניברסיטה העברית, יד ושם)
+
+## Contributing
+
+We welcome contributions to help improve the Jerusalem Light Rail MCP server. Whether you want to add new tools, enhance existing functionality, or improve documentation, your input is valuable.
+
+For examples of other MCP servers and implementation patterns, see the [Model Context Protocol servers repository](https://github.com/modelcontextprotocol/servers).
+
 ## License
 
-MIT
+This project is licensed under the MIT License.
