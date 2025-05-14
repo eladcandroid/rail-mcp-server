@@ -50,10 +50,7 @@ You can install this server in Claude AI and interact with it right away.
 
 To use this MCP server with Claude Desktop:
 
-1. Install the `mcp-remote` package globally (if not already installed):
-```bash
-npm install -g mcp-remote
-```
+1. Make sure you have Node.js installed on your system (prerequisite for npx)
 
 2. Add the following configuration to your Claude Desktop configuration file:
 ```json
